@@ -2,124 +2,192 @@
 
 ## Overview
 
-The RAMP Connector integrates the **RAMP API** with **AppXchange** to enable seamless interactions with RAMP's Accounting, Core, and other related modules. This connector facilitates data management and transactions for various RAMP services such as accounting fields, bank accounts, reimbursements, vendors, limits, cards, transactions, and more. 
+The **RAMP Connector** enables seamless integration between RAMP's financial services platform and Trimble AppXchange. This connector facilitates data management and transactions across RAMP's comprehensive API endpoints, supporting accounting operations, card management, expense tracking, and vendor relationships.
 
-This **RAMP Connector** enables users to create, update, retrieve, delete, and manage essential data objects and actions as part of their financial and accounting operations.
+## Prerequisites
 
-## Table of Contents
-
-- [Connector Setup](#connector-setup)
-- [Authentication](#authentication)
-- [Modules](#modules)
-  - [Module 1: Accounting](#module-1-accounting)
-  - [Module 2: Core](#module-2-core)
-- [Actions](#actions)
-- [Data Objects](#data-objects)
-- [API Endpoints](#api-endpoints)
-- [Additional Resources](#additional-resources)
-
-## Connector Setup
-
-1. Navigate to the project directory:
-    ```bash
-    cd desktop/connectors
-    mkdir connector-ramp
-    cd connector-ramp
-    xchange connector new --name RAMP
-    cd connector
-    ```
-
-2. Initialize the AppXchange client:
-    ```bash
-    xchange client new --type Http --auth-type OAuth2CodeFlow
-    ```
+1. **RAMP API Access**: Valid OAuth2 credentials for RAMP's API
+2. **.NET SDK**: .NET 7 or 8 installed
+3. **AppXchange CLI**: Install using `dotnet tool install Trimble.Xchange.Connector.CLI --global`
+4. **C# Development Skills**: Intermediate level required
+5. **API Understanding**: Familiarity with RAMP's API structure and endpoints
 
 ## Authentication
 
-Authentication for the RAMP API is performed using the **OAuth 2.0 Authorization Code Flow**.
+The connector uses OAuth 2.0 Authorization Code Flow for authentication. Key endpoints:
 
-- [OAuth Guide](https://docs.ramp.com/developer-api/v1/guides/oauth)
-- [Create Token](https://docs.ramp.com/developer-api/v1/api/authorization#post-developer-v1-token)
-- [Revoke/Refresh Tokens](https://docs.ramp.com/developer-api/v1/api/authorization#post-developer-v1-token-revoke)
+- **Token Creation**: POST `/developer/v1/token`
+- **Token Refresh**: POST `/developer/v1/token/refresh`
+- **Token Revocation**: POST `/developer/v1/token/revoke`
 
 ## Modules
 
-### Module 1: Accounting
+### 1. Accounting Module (`accounting-1`)
 
-The **Accounting Module** provides the necessary endpoints and data objects for handling accounting-related tasks, including creating fields, updating accounts, managing GL accounts, vendors, and performing synchronization.
+Manages financial and accounting operations through various endpoints.
 
-#### Key Data Objects:
-- **FieldOptions**
-- **Fields**
-- **Accounts**
-- **Account**
-- **Connection**
-- **Sync**
-- **Vendors**
-- **Vendor**
+#### Data Objects:
+- **FieldOptions**: Custom field configurations
+- **Fields**: Accounting field definitions
+- **Accounts**: GL account management
+- **Connection**: Third-party system connections
+- **Sync**: Synchronization status tracking
+- **Vendors**: Vendor management
+
+#### Key Actions:
+- **FieldOptions**:
+  - Upload: Create new field options
+  - Update: Modify existing options
+  - Delete: Remove field options
   
+- **Fields**:
+  - Create: Add new accounting fields
+  - Update: Modify field properties
+  - Delete: Remove fields
+  
+- **Accounts**:
+  - Upload: Batch create accounts
+  - Update: Modify account details
+  - Delete: Remove accounts
+  
+- **Connection**:
+  - Register: Create new connection
+  - Delete: Remove connection
+  
+- **Sync**:
+  - PostStatus: Update sync status
+  
+- **Vendors**:
+  - Upload: Create vendors
+  - Update: Modify vendor details
+  - Delete: Remove vendors
+
+### 2. Core Module (`core-1`)
+
+Handles essential business operations and card management.
+
+#### Data Objects:
+- **BankAccount**: Banking information
+- **Bills**: Payment tracking
+- **Business**: Company information
+- **Cards**: Card management
+- **Cashbacks**: Reward tracking
+- **Departments**: Organizational structure
+- **Limits**: Spending controls
+- **Locations**: Physical addresses
+- **Merchants**: Vendor details
+- **Receipts**: Transaction documentation
+- **Transactions**: Financial records
+- **Users**: User management
+- **Vendors**: Vendor relationships
+
 #### Key Actions:
-- **Create Field Options**
-- **Update/Upload/Delete Accounts**
-- **Register/Delete Connections**
-- **Post Sync Status**
-- **Upload/Update/Delete Vendors**
+- **Bills**:
+  - Create: Generate new bills
+  - Update: Modify bill details
+  - Delete: Remove bills
 
-### Module 2: Core
+- **Cards**:
+  - Create: Issue new cards (virtual/physical)
+  - Update: Modify card details
+  - Suspend: Temporarily disable cards
+  - Terminate: Permanently disable cards
+  - Unlock: Reactivate suspended cards
 
-The **Core Module** offers endpoints and data objects that support basic financial operations like handling cards, bills, cashbacks, limits, transactions, users, and more.
+- **Limits**:
+  - Create: Set spending limits
+  - Update: Modify limits
+  - Terminate: Remove limits
+  - Suspend/Unsuspend: Toggle limit status
+  - AddUsers/RemoveUsers: Manage shared limits
 
-#### Key Data Objects:
-- **Bills**
-- **CardPrograms**
-- **Cards**
-- **Cashbacks**
-- **Departments**
-- **Transactions**
-- **Transfers**
-- **Users**
-- **Vendors**
+- **Users**:
+  - Create: Invite new users
+  - Update: Modify user details
+  - Deactivate/Reactivate: Manage user status
 
-#### Key Actions:
-- **Create Bill**
-- **Create/Update/Terminate Cards**
-- **Create/Update Limits**
-- **Upload Transactions/Receipts**
-- **Update User Details**
-- **Manage Vendor Accounts**
+## API Structure
 
-## Actions
+### Base URLs:
+- Production: `https://api.ramp.com/developer/v1`
+- Authentication: `https://auth.ramp.com/oauth2`
 
-- **Authentication Actions**: Handle token creation, revocation, and refresh.
-- **Accounting Actions**: Upload field options, update GL accounts, and vendor management.
-- **Core Actions**: Create bills, manage cards, and handle transactions.
+### Common Endpoints:
 
-## Data Objects
+#### Accounting Module:
+```
+GET    /accounting/field-options
+POST   /accounting/field-options
+PATCH  /accounting/field-options/{id}
+DELETE /accounting/field-options/{id}
+GET    /accounting/fields
+POST   /accounting/fields
+GET    /accounting/accounts
+POST   /accounting/accounts
+```
 
-The following data objects are available for interaction:
+#### Core Module:
+```
+GET    /cards
+POST   /cards/deferred-virtual
+POST   /cards/deferred-physical
+PATCH  /cards/{id}
+GET    /transactions
+GET    /users
+PATCH  /users/{id}
+GET    /vendors
+POST   /vendors
+```
 
-- **Accounting Module**:
-    - `FieldOptions`, `Fields`, `Accounts`, `Vendor`
-    - Used for managing fields, account types, and vendor records.
+## Development
 
-- **Core Module**:
-    - `Bills`, `Cards`, `Cashbacks`, `Departments`, `Transactions`, etc.
-    - Used for managing transactional data, cards, cashbacks, and bills.
+### Project Structure
+```
+connector-ramp/
+├── Connector/
+│   ├── App/
+│   │   ├── accounting/
+│   │   └── core/
+│   ├── Client/
+│   ├── Connections/
+│   ├── Connector.csproj
+│   └── settings.json
+└── Connector.sln
+```
 
-## API Endpoints
+### Getting Started
 
-### Example API Calls:
-- **Authentication API**: `POST /developer/v1/token`
-- **Accounting**: 
-  - `GET /developer/v1/accounting/fields`
-  - `POST /developer/v1/accounting/fields`
-- **Core**: 
-  - `GET /developer/v1/cards`
-  - `POST /developer/v1/cards`
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   dotnet restore
+   ```
+3. Configure OAuth credentials in `test-settings.json`
+4. Build the project:
+   ```bash
+   dotnet build
+   ```
 
-For detailed API documentation, visit the [RAMP Developer API Docs](https://docs.ramp.com/developer-api).
+## Testing
+
+1. Initialize test settings:
+   ```bash
+   xchange test init
+   ```
+2. Configure test credentials in `test-settings.json`
+3. Run local tests:
+   ```bash
+   dotnet test
+   ```
 
 ## Additional Resources
 
-- [AppXchange Documentation](https://docs.appxchange.trimble.com/)
+- [RAMP API Documentation](https://docs.ramp.com/developer-api)
 - [AppXchange Connector Docs](https://trimble-xchange.github.io/connector-docs/)
+- [OAuth 2.0 Guide](https://docs.ramp.com/developer-api/v1/guides/oauth)
+
+## Support
+
+For connector-specific issues, contact [xchange_build@trimble.com](mailto:xchange_build@trimble.com).
+For RAMP API questions, refer to their [developer support](https://docs.ramp.com/developer-api).
+
