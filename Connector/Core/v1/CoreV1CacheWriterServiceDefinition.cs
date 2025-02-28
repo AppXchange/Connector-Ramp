@@ -1,0 +1,241 @@
+namespace Connector.Core.v1;
+using Connector.Core.v1.BankAccount;
+using Connector.Core.v1.Bill;
+using Connector.Core.v1.Bills;
+using Connector.Core.v1.Business;
+using Connector.Core.v1.BusinessBalance;
+using Connector.Core.v1.Card;
+using Connector.Core.v1.CardProgram;
+using Connector.Core.v1.CardPrograms;
+using Connector.Core.v1.Cards;
+using Connector.Core.v1.CardsDeferredTaskStatus;
+using Connector.Core.v1.Cashback;
+using Connector.Core.v1.Cashbacks;
+using Connector.Core.v1.Department;
+using Connector.Core.v1.Departments;
+using Connector.Core.v1.Entities;
+using Connector.Core.v1.Entity;
+using Connector.Core.v1.Lead;
+using Connector.Core.v1.Limit;
+using Connector.Core.v1.Limits;
+using Connector.Core.v1.LimitsDeferredTaskStatus;
+using Connector.Core.v1.Location;
+using Connector.Core.v1.Locations;
+using Connector.Core.v1.Memos;
+using Connector.Core.v1.MemosTransaction;
+using Connector.Core.v1.Merchants;
+using Connector.Core.v1.PhysicalCard;
+using Connector.Core.v1.Receipt;
+using Connector.Core.v1.Receipts;
+using Connector.Core.v1.Reimbursement;
+using Connector.Core.v1.Reimbursements;
+using Connector.Core.v1.SharedLimit;
+using Connector.Core.v1.SpendProgram;
+using Connector.Core.v1.SpendPrograms;
+using Connector.Core.v1.Statement;
+using Connector.Core.v1.Statements;
+using Connector.Core.v1.Transaction;
+using Connector.Core.v1.Transactions;
+using Connector.Core.v1.Transfer;
+using Connector.Core.v1.Transfers;
+using Connector.Core.v1.User;
+using Connector.Core.v1.UserInvite;
+using Connector.Core.v1.Users;
+using Connector.Core.v1.UsersDeferredTaskStatus;
+using Connector.Core.v1.Vendor;
+using Connector.Core.v1.VendorBankAccount;
+using Connector.Core.v1.VendorBankAccounts;
+using Connector.Core.v1.VendorContact;
+using Connector.Core.v1.VendorContacts;
+using Connector.Core.v1.Vendors;
+using Connector.Core.v1.VirtualCard;
+using ESR.Hosting.CacheWriter;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Text.Json;
+using Xchange.Connector.SDK.Abstraction.Change;
+using Xchange.Connector.SDK.Abstraction.Hosting;
+using Xchange.Connector.SDK.CacheWriter;
+using Xchange.Connector.SDK.Hosting.Configuration;
+
+public class CoreV1CacheWriterServiceDefinition : BaseCacheWriterServiceDefinition<CoreV1CacheWriterConfig>
+{
+    public override string ModuleId => "core-1";
+    public override Type ServiceType => typeof(GenericCacheWriterService<CoreV1CacheWriterConfig>);
+
+    public override void ConfigureServiceDependencies(IServiceCollection serviceCollection, string serviceConfigJson)
+    {
+        var serviceConfig = JsonSerializer.Deserialize<CoreV1CacheWriterConfig>(serviceConfigJson);
+        serviceCollection.AddSingleton<CoreV1CacheWriterConfig>(serviceConfig!);
+        serviceCollection.AddSingleton<GenericCacheWriterService<CoreV1CacheWriterConfig>>();
+        serviceCollection.AddSingleton<ICacheWriterServiceDefinition<CoreV1CacheWriterConfig>>(this);
+        // Register Data Readers as Singletons
+        serviceCollection.AddSingleton<BankAccountDataReader>();
+        serviceCollection.AddSingleton<BillsDataReader>();
+        serviceCollection.AddSingleton<BillDataReader>();
+        serviceCollection.AddSingleton<BusinessDataReader>();
+        serviceCollection.AddSingleton<BusinessBalanceDataReader>();
+        serviceCollection.AddSingleton<CardProgramsDataReader>();
+        serviceCollection.AddSingleton<CardProgramDataReader>();
+        serviceCollection.AddSingleton<CardsDataReader>();
+        serviceCollection.AddSingleton<CardDataReader>();
+        serviceCollection.AddSingleton<CardsDeferredTaskStatusDataReader>();
+        serviceCollection.AddSingleton<PhysicalCardDataReader>();
+        serviceCollection.AddSingleton<VirtualCardDataReader>();
+        serviceCollection.AddSingleton<CashbacksDataReader>();
+        serviceCollection.AddSingleton<CashbackDataReader>();
+        serviceCollection.AddSingleton<DepartmentsDataReader>();
+        serviceCollection.AddSingleton<DepartmentDataReader>();
+        serviceCollection.AddSingleton<EntitiesDataReader>();
+        serviceCollection.AddSingleton<EntityDataReader>();
+        serviceCollection.AddSingleton<LeadDataReader>();
+        serviceCollection.AddSingleton<LimitsDataReader>();
+        serviceCollection.AddSingleton<LimitDataReader>();
+        serviceCollection.AddSingleton<LimitsDeferredTaskStatusDataReader>();
+        serviceCollection.AddSingleton<SharedLimitDataReader>();
+        serviceCollection.AddSingleton<LocationsDataReader>();
+        serviceCollection.AddSingleton<LocationDataReader>();
+        serviceCollection.AddSingleton<MemosDataReader>();
+        serviceCollection.AddSingleton<MemosTransactionDataReader>();
+        serviceCollection.AddSingleton<MerchantsDataReader>();
+        serviceCollection.AddSingleton<ReceiptsDataReader>();
+        serviceCollection.AddSingleton<ReceiptDataReader>();
+        serviceCollection.AddSingleton<ReimbursementsDataReader>();
+        serviceCollection.AddSingleton<ReimbursementDataReader>();
+        serviceCollection.AddSingleton<SpendProgramsDataReader>();
+        serviceCollection.AddSingleton<SpendProgramDataReader>();
+        serviceCollection.AddSingleton<StatementsDataReader>();
+        serviceCollection.AddSingleton<StatementDataReader>();
+        serviceCollection.AddSingleton<TransactionsDataReader>();
+        serviceCollection.AddSingleton<TransactionDataReader>();
+        serviceCollection.AddSingleton<TransfersDataReader>();
+        serviceCollection.AddSingleton<TransferDataReader>();
+        serviceCollection.AddSingleton<UsersDataReader>();
+        serviceCollection.AddSingleton<UserDataReader>();
+        serviceCollection.AddSingleton<UserInviteDataReader>();
+        serviceCollection.AddSingleton<UsersDeferredTaskStatusDataReader>();
+        serviceCollection.AddSingleton<VendorsDataReader>();
+        serviceCollection.AddSingleton<VendorDataReader>();
+        serviceCollection.AddSingleton<VendorBankAccountsDataReader>();
+        serviceCollection.AddSingleton<VendorBankAccountDataReader>();
+        serviceCollection.AddSingleton<VendorContactsDataReader>();
+        serviceCollection.AddSingleton<VendorContactDataReader>();
+    }
+
+    public override IDataObjectChangeDetectorProvider ConfigureChangeDetectorProvider(IChangeDetectorFactory factory, ConnectorDefinition connectorDefinition)
+    {
+        var options = factory.CreateProviderOptionsWithNoDefaultResolver();
+        // Configure Data Object Keys for Data Objects that do not use the default
+        this.RegisterKeysForObject<BankAccountDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<BillsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<BillDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<BusinessDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<BusinessBalanceDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CardProgramsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CardProgramDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CardsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CardDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CardsDeferredTaskStatusDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<PhysicalCardDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VirtualCardDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CashbacksDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<CashbackDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<DepartmentsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<DepartmentDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<EntitiesDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<EntityDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LeadDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LimitsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LimitDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LimitsDeferredTaskStatusDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<SharedLimitDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LocationsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<LocationDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<MemosDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<MemosTransactionDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<MerchantsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<ReceiptsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<ReceiptDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<ReimbursementsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<ReimbursementDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<SpendProgramsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<SpendProgramDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<StatementsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<StatementDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<TransactionsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<TransactionDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<TransfersDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<TransferDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<UsersDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<UserDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<UserInviteDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<UsersDeferredTaskStatusDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorBankAccountsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorBankAccountDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorContactsDataObject>(options, connectorDefinition);
+        this.RegisterKeysForObject<VendorContactDataObject>(options, connectorDefinition);
+        return factory.CreateProvider(options);
+    }
+
+    public override void ConfigureService(ICacheWriterService service, CoreV1CacheWriterConfig config)
+    {
+        var dataReaderSettings = new DataReaderSettings
+        {
+            DisableDeletes = false,
+            UseChangeDetection = true
+        };
+        // Register Data Reader configurations for the Cache Writer Service
+        service.RegisterDataReader<BankAccountDataReader, BankAccountDataObject>(ModuleId, config.BankAccountConfig, dataReaderSettings);
+        service.RegisterDataReader<BillsDataReader, BillsDataObject>(ModuleId, config.BillsConfig, dataReaderSettings);
+        service.RegisterDataReader<BillDataReader, BillDataObject>(ModuleId, config.BillConfig, dataReaderSettings);
+        service.RegisterDataReader<BusinessDataReader, BusinessDataObject>(ModuleId, config.BusinessConfig, dataReaderSettings);
+        service.RegisterDataReader<BusinessBalanceDataReader, BusinessBalanceDataObject>(ModuleId, config.BusinessBalanceConfig, dataReaderSettings);
+        service.RegisterDataReader<CardProgramsDataReader, CardProgramsDataObject>(ModuleId, config.CardProgramsConfig, dataReaderSettings);
+        service.RegisterDataReader<CardProgramDataReader, CardProgramDataObject>(ModuleId, config.CardProgramConfig, dataReaderSettings);
+        service.RegisterDataReader<CardsDataReader, CardsDataObject>(ModuleId, config.CardsConfig, dataReaderSettings);
+        service.RegisterDataReader<CardDataReader, CardDataObject>(ModuleId, config.CardConfig, dataReaderSettings);
+        service.RegisterDataReader<CardsDeferredTaskStatusDataReader, CardsDeferredTaskStatusDataObject>(ModuleId, config.CardsDeferredTaskStatusConfig, dataReaderSettings);
+        service.RegisterDataReader<PhysicalCardDataReader, PhysicalCardDataObject>(ModuleId, config.PhysicalCardConfig, dataReaderSettings);
+        service.RegisterDataReader<VirtualCardDataReader, VirtualCardDataObject>(ModuleId, config.VirtualCardConfig, dataReaderSettings);
+        service.RegisterDataReader<CashbacksDataReader, CashbacksDataObject>(ModuleId, config.CashbacksConfig, dataReaderSettings);
+        service.RegisterDataReader<CashbackDataReader, CashbackDataObject>(ModuleId, config.CashbackConfig, dataReaderSettings);
+        service.RegisterDataReader<DepartmentsDataReader, DepartmentsDataObject>(ModuleId, config.DepartmentsConfig, dataReaderSettings);
+        service.RegisterDataReader<DepartmentDataReader, DepartmentDataObject>(ModuleId, config.DepartmentConfig, dataReaderSettings);
+        service.RegisterDataReader<EntitiesDataReader, EntitiesDataObject>(ModuleId, config.EntitiesConfig, dataReaderSettings);
+        service.RegisterDataReader<EntityDataReader, EntityDataObject>(ModuleId, config.EntityConfig, dataReaderSettings);
+        service.RegisterDataReader<LeadDataReader, LeadDataObject>(ModuleId, config.LeadConfig, dataReaderSettings);
+        service.RegisterDataReader<LimitsDataReader, LimitsDataObject>(ModuleId, config.LimitsConfig, dataReaderSettings);
+        service.RegisterDataReader<LimitDataReader, LimitDataObject>(ModuleId, config.LimitConfig, dataReaderSettings);
+        service.RegisterDataReader<LimitsDeferredTaskStatusDataReader, LimitsDeferredTaskStatusDataObject>(ModuleId, config.LimitsDeferredTaskStatusConfig, dataReaderSettings);
+        service.RegisterDataReader<SharedLimitDataReader, SharedLimitDataObject>(ModuleId, config.SharedLimitConfig, dataReaderSettings);
+        service.RegisterDataReader<LocationsDataReader, LocationsDataObject>(ModuleId, config.LocationsConfig, dataReaderSettings);
+        service.RegisterDataReader<LocationDataReader, LocationDataObject>(ModuleId, config.LocationConfig, dataReaderSettings);
+        service.RegisterDataReader<MemosDataReader, MemosDataObject>(ModuleId, config.MemosConfig, dataReaderSettings);
+        service.RegisterDataReader<MemosTransactionDataReader, MemosTransactionDataObject>(ModuleId, config.MemosTransactionConfig, dataReaderSettings);
+        service.RegisterDataReader<MerchantsDataReader, MerchantsDataObject>(ModuleId, config.MerchantsConfig, dataReaderSettings);
+        service.RegisterDataReader<ReceiptsDataReader, ReceiptsDataObject>(ModuleId, config.ReceiptsConfig, dataReaderSettings);
+        service.RegisterDataReader<ReceiptDataReader, ReceiptDataObject>(ModuleId, config.ReceiptConfig, dataReaderSettings);
+        service.RegisterDataReader<ReimbursementsDataReader, ReimbursementsDataObject>(ModuleId, config.ReimbursementsConfig, dataReaderSettings);
+        service.RegisterDataReader<ReimbursementDataReader, ReimbursementDataObject>(ModuleId, config.ReimbursementConfig, dataReaderSettings);
+        service.RegisterDataReader<SpendProgramsDataReader, SpendProgramsDataObject>(ModuleId, config.SpendProgramsConfig, dataReaderSettings);
+        service.RegisterDataReader<SpendProgramDataReader, SpendProgramDataObject>(ModuleId, config.SpendProgramConfig, dataReaderSettings);
+        service.RegisterDataReader<StatementsDataReader, StatementsDataObject>(ModuleId, config.StatementsConfig, dataReaderSettings);
+        service.RegisterDataReader<StatementDataReader, StatementDataObject>(ModuleId, config.StatementConfig, dataReaderSettings);
+        service.RegisterDataReader<TransactionsDataReader, TransactionsDataObject>(ModuleId, config.TransactionsConfig, dataReaderSettings);
+        service.RegisterDataReader<TransactionDataReader, TransactionDataObject>(ModuleId, config.TransactionConfig, dataReaderSettings);
+        service.RegisterDataReader<TransfersDataReader, TransfersDataObject>(ModuleId, config.TransfersConfig, dataReaderSettings);
+        service.RegisterDataReader<TransferDataReader, TransferDataObject>(ModuleId, config.TransferConfig, dataReaderSettings);
+        service.RegisterDataReader<UsersDataReader, UsersDataObject>(ModuleId, config.UsersConfig, dataReaderSettings);
+        service.RegisterDataReader<UserDataReader, UserDataObject>(ModuleId, config.UserConfig, dataReaderSettings);
+        service.RegisterDataReader<UserInviteDataReader, UserInviteDataObject>(ModuleId, config.UserInviteConfig, dataReaderSettings);
+        service.RegisterDataReader<UsersDeferredTaskStatusDataReader, UsersDeferredTaskStatusDataObject>(ModuleId, config.UsersDeferredTaskStatusConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorsDataReader, VendorsDataObject>(ModuleId, config.VendorsConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorDataReader, VendorDataObject>(ModuleId, config.VendorConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorBankAccountsDataReader, VendorBankAccountsDataObject>(ModuleId, config.VendorBankAccountsConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorBankAccountDataReader, VendorBankAccountDataObject>(ModuleId, config.VendorBankAccountConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorContactsDataReader, VendorContactsDataObject>(ModuleId, config.VendorContactsConfig, dataReaderSettings);
+        service.RegisterDataReader<VendorContactDataReader, VendorContactDataObject>(ModuleId, config.VendorContactConfig, dataReaderSettings);
+    }
+}

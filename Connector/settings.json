@@ -1,0 +1,24 @@
+{
+  "name": "RAMP",
+  "urlPart": "ramp",
+  "key": "ramp",
+  "description": "",
+  "modules": [
+    {
+      "id": "accounting-1",
+      "name": "Accounting",
+      "urlPart": "accounting",
+      "key": "accounting",
+      "description": "",
+      "version": 1
+    },
+    {
+      "id": "core-1",
+      "name": "Core",
+      "urlPart": "core",
+      "key": "core",
+      "description": "",
+      "version": 1
+    }
+  ]
+}
