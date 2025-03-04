@@ -1,0 +1,337 @@
+﻿# Build
+cd desktop/connectors
+mkdir connector-ramp
+cd connector-ramp
+xchange connector new --name RAMP
+cd connector
+
+
+
+
+
+
+______
+
+
+
+
+
+
+# Auth
+https://docs.ramp.com/developer-api/v1/guides/oauth
+xchange client new --type Http --auth-type OAuth2CodeFlow
+
+
+
+
+# Authorization
+Create Token: https://docs.ramp.com/developer-api/v1/api/authorization#post-developer-v1-token
+Revoke/Refresh: https://docs.ramp.com/developer-api/v1/api/authorization#post-developer-v1-token-revoke
+
+
+______
+
+
+## Module 1: Accounting
+https://docs.ramp.com/developer-api/v1/api/
+xchange module new --id accounting-1 --name Accounting --key accounting --version 1
+
+
+# Accounting
+https://docs.ramp.com/developer-api/v1/api/accounting#get-developer-v1-accounting-field-options
+xchange data-object new --module-id accounting-1 --name FieldOptions
+https://docs.ramp.com/developer-api/v1/api/accounting#post-developer-v1-accounting-field-options
+xchange action new --module-id accounting-1 --object-name FieldOptions --name Upload
+https://docs.ramp.com/developer-api/v1/api/accounting#get-developer-v1-accounting-field-options-field-option-id
+xchange data-object new --module-id accounting-1 --name CustomFieldOptions
+https://docs.ramp.com/developer-api/v1/api/accounting#patch-developer-v1-accounting-field-options-field-option-id
+xchange action new --module-id accounting-1 --object-name FieldOptions --name Update
+https://docs.ramp.com/developer-api/v1/api/accounting#delete-developer-v1-accounting-field-options-field-option-id
+xchange action new --module-id accounting-1 --object-name FieldOptions --name Delete
+https://docs.ramp.com/developer-api/v1/api/accounting#get-developer-v1-accounting-fields
+xchange data-object new --module-id accounting-1 --name Fields
+https://docs.ramp.com/developer-api/v1/api/accounting#post-developer-v1-accounting-fields
+xchange action new --module-id accounting-1 --object-name Fields --name Create
+https://docs.ramp.com/developer-api/v1/api/accounting#get-developer-v1-accounting-fields-field-id
+xchange data-object new --module-id accounting-1 --name Field
+https://docs.ramp.com/developer-api/v1/api/accounting#patch-developer-v1-accounting-fields-field-id
+xchange action new --module-id accounting-1 --object-name Field --name Update
+https://docs.ramp.com/developer-api/v1/api/accounting#delete-developer-v1-accounting-fields-field-id
+xchange action new --module-id accounting-1 --object-name Field --name Delete
+
+
+# Accounting GL Accounts
+https://docs.ramp.com/developer-api/v1/api/accounting-gl-accounts#get-developer-v1-accounting-accounts
+xchange data-object new --module-id accounting-1 --name Accounts
+https://docs.ramp.com/developer-api/v1/api/accounting-gl-accounts#post-developer-v1-accounting-accounts
+xchange action new --module-id accounting-1 --object-name Accounts --name Upload
+https://docs.ramp.com/developer-api/v1/api/accounting-gl-accounts#get-developer-v1-accounting-accounts-gl-account-id
+xchange data-object new --module-id accounting-1 --name Account
+https://docs.ramp.com/developer-api/v1/api/accounting-gl-accounts#patch-developer-v1-accounting-accounts-gl-account-id
+xchange action new --module-id accounting-1 --object-name Account --name Update
+https://docs.ramp.com/developer-api/v1/api/accounting-gl-accounts#delete-developer-v1-accounting-accounts-gl-account-id
+xchange action new --module-id accounting-1 --object-name Account --name Delete
+
+
+# Accounting Connections
+https://docs.ramp.com/developer-api/v1/api/accounting-connections#get-developer-v1-accounting-connection
+xchange data-object new --module-id accounting-1 --name Connection
+https://docs.ramp.com/developer-api/v1/api/accounting-connections#post-developer-v1-accounting-connection
+xchange action new --module-id accounting-1 --object-name Connection --name Register
+https://docs.ramp.com/developer-api/v1/api/accounting-connections#delete-developer-v1-accounting-connection
+xchange action new --module-id accounting-1 --object-name Connection --name Delete
+
+
+# Accounting Sync
+https://docs.ramp.com/developer-api/v1/api/accounting-sync#post-developer-v1-accounting-syncs
+xchange data-object new --module-id accounting-1 --name Sync
+xchange action new --module-id accounting-1 --object-name Sync --name PostStatus
+
+
+# Vendors
+https://docs.ramp.com/developer-api/v1/api/accounting-vendors#get-developer-v1-accounting-vendors
+xchange data-object new --module-id accounting-1 --name Vendors
+https://docs.ramp.com/developer-api/v1/api/accounting-vendors#post-developer-v1-accounting-vendors
+xchange action new --module-id accounting-1 --object-name Vendors --name Upload
+https://docs.ramp.com/developer-api/v1/api/accounting-vendors#get-developer-v1-accounting-vendors-vendor-id
+xchange data-object new --module-id accounting-1 --name Vendor
+https://docs.ramp.com/developer-api/v1/api/accounting-vendors#patch-developer-v1-accounting-vendors-vendor-id
+xchange action new --module-id accounting-1 --object-name Vendors --name Update
+https://docs.ramp.com/developer-api/v1/api/accounting-vendors#delete-developer-v1-accounting-vendors-vendor-id
+xchange action new --module-id accounting-1 --object-name Vendors --name Delete
+
+
+______
+## Module 2: Core
+xchange module new --id core-1 --name Core --key core --version 1
+
+
+# Bank Accounts
+https://docs.ramp.com/developer-api/v1/api/bank-accounts#get-developer-v1-bank-accounts-bank-account-id
+xchange data-object new --module-id core-1 --name BankAccount
+
+
+# Bills
+https://docs.ramp.com/developer-api/v1/api/bills#get-developer-v1-bills
+xchange data-object new --module-id core-1 --name Bills
+https://docs.ramp.com/developer-api/v1/api/bills#get-developer-v1-bills-bill-id
+xchange data-object new --module-id core-1 --name Bill
+https://docs.ramp.com/developer-api/v1/api/bills#post-developer-v1-bills
+xchange action new --module-id core-1 --object-name Bill --name Create
+https://docs.ramp.com/developer-api/v1/api/bills#patch-developer-v1-bills-bill-id
+xchange action new --module-id core-1 --object-name Bill --name Update
+https://docs.ramp.com/developer-api/v1/api/bills#delete-developer-v1-bills-bill-id
+xchange action new --module-id core-1 --object-name Bill --name Delete
+
+
+# Business
+https://docs.ramp.com/developer-api/v1/api/business#get-developer-v1-business
+xchange data-object new --module-id core-1 --name Business
+https://docs.ramp.com/developer-api/v1/api/business#get-developer-v1-business-balance
+xchange data-object new --module-id core-1 --name BusinessBalance
+
+
+# Card Programs
+https://docs.ramp.com/developer-api/v1/api/card-programs#get-developer-v1-card-programs
+xchange data-object new --module-id core-1 --name CardPrograms
+https://docs.ramp.com/developer-api/v1/api/card-programs#get-developer-v1-card-programs-card-program-id
+xchange data-object new --module-id core-1 --name CardProgram
+https://docs.ramp.com/developer-api/v1/api/card-programs#post-developer-v1-card-programs
+xchange action new --module-id core-1 --object-name CardProgram --name Create
+
+
+# Cards
+https://docs.ramp.com/developer-api/v1/api/cards#get-developer-v1-cards
+xchange data-object new --module-id core-1 --name Cards
+https://docs.ramp.com/developer-api/v1/api/cards#get-developer-v1-cards-card-id
+xchange data-object new --module-id core-1 --name Card
+https://docs.ramp.com/developer-api/v1/api/cards#patch-developer-v1-cards-card-id
+xchange action new --module-id core-1 --object-name Card --name Update
+https://docs.ramp.com/developer-api/v1/api/cards#post-developer-v1-cards-card-id-deferred-suspension
+xchange action new --module-id core-1 --object-name Card --name Suspend
+https://docs.ramp.com/developer-api/v1/api/cards#post-developer-v1-cards-card-id-deferred-termination
+xchange action new --module-id core-1 --object-name Card --name Terminate
+https://docs.ramp.com/developer-api/v1/api/cards#post-developer-v1-cards-card-id-deferred-unsuspension
+xchange action new --module-id core-1 --object-name Card --name Unlock
+https://docs.ramp.com/developer-api/v1/api/cards#get-developer-v1-cards-deferred-status-task-id
+xchange data-object new --module-id core-1 --name CardsDeferredTaskStatus
+https://docs.ramp.com/developer-api/v1/api/cards#post-developer-v1-cards-deferred-physical
+xchange data-object new --module-id core-1 --name PhysicalCard
+xchange action new --module-id core-1 --object-name PhysicalCard --name Create
+https://docs.ramp.com/developer-api/v1/api/cards#post-developer-v1-cards-deferred-virtual
+xchange data-object new --module-id core-1 --name VirtualCard
+xchange action new --module-id core-1 --object-name VirtualCard --name Create
+
+
+# Cashbacks
+https://docs.ramp.com/developer-api/v1/api/cashbacks#get-developer-v1-cashbacks
+xchange data-object new --module-id core-1 --name Cashbacks
+https://docs.ramp.com/developer-api/v1/api/cashbacks#get-developer-v1-cashbacks-cashback-id
+xchange data-object new --module-id core-1 --name Cashback
+
+
+# Departments
+https://docs.ramp.com/developer-api/v1/api/departments#get-developer-v1-departments
+xchange data-object new --module-id core-1 --name Departments
+https://docs.ramp.com/developer-api/v1/api/departments#get-developer-v1-departments-department-id
+xchange data-object new --module-id core-1 --name Department
+https://docs.ramp.com/developer-api/v1/api/departments#post-developer-v1-departments
+xchange action new --module-id core-1 --object-name Department --name Create
+https://docs.ramp.com/developer-api/v1/api/departments#patch-developer-v1-departments-department-id
+xchange action new --module-id core-1 --object-name Department --name Update
+
+
+# Entities
+https://docs.ramp.com/developer-api/v1/api/entities#get-developer-v1-entities
+xchange data-object new --module-id core-1 --name Entities
+https://docs.ramp.com/developer-api/v1/api/entities#get-developer-v1-entities-entity-id
+xchange data-object new --module-id core-1 --name Entity
+
+
+# Leads
+https://docs.ramp.com/developer-api/v1/api/leads#get-developer-v1-leads-sales-lead-id
+xchange data-object new --module-id core-1 --name Lead
+https://docs.ramp.com/developer-api/v1/api/leads#post-developer-v1-leads
+xchange action new --module-id core-1 --object-name Lead --name Create
+
+
+# Limits
+https://docs.ramp.com/developer-api/v1/api/limits#get-developer-v1-limits
+xchange data-object new --module-id core-1 --name Limits
+https://docs.ramp.com/developer-api/v1/api/limits#get-developer-v1-limits-spend-limit-id
+xchange data-object new --module-id core-1 --name Limit
+https://docs.ramp.com/developer-api/v1/api/limits#post-developer-v1-limits-deferred
+xchange action new --module-id core-1 --object-name Limit --name Create
+https://docs.ramp.com/developer-api/v1/api/limits#patch-developer-v1-limits-spend-limit-id
+xchange action new --module-id core-1 --object-name Limit --name Update
+https://docs.ramp.com/developer-api/v1/api/limits#post-developer-v1-limits-spend-limit-id-deferred-termination
+xchange action new --module-id core-1 --object-name Limit --name Terminate
+https://docs.ramp.com/developer-api/v1/api/limits#post-developer-v1-limits-spend-limit-id-suspension
+xchange action new --module-id core-1 --object-name Limit --name Suspend
+https://docs.ramp.com/developer-api/v1/api/limits#post-developer-v1-limits-spend-limit-id-unsuspension
+xchange action new --module-id core-1 --object-name Limit --name Unsuspend
+https://docs.ramp.com/developer-api/v1/api/limits#get-developer-v1-limits-deferred-status-task-id
+xchange data-object new --module-id core-1 --name LimitsDeferredTaskStatus
+xchange data-object new --module-id core-1 --name SharedLimit
+https://docs.ramp.com/developer-api/v1/api/limits#put-developer-v1-limits-spend-limit-id-add-users
+xchange action new --module-id core-1 --object-name SharedLimit --name AddUsers
+https://docs.ramp.com/developer-api/v1/api/limits#put-developer-v1-limits-spend-limit-id-add-users
+xchange action new --module-id core-1 --object-name SharedLimit --name RemoveUsers
+
+
+
+
+# Locations
+https://docs.ramp.com/developer-api/v1/api/locations#get-developer-v1-locations
+xchange data-object new --module-id core-1 --name Locations
+https://docs.ramp.com/developer-api/v1/api/locations#get-developer-v1-locations-location-id
+xchange data-object new --module-id core-1 --name Location
+https://docs.ramp.com/developer-api/v1/api/locations#post-developer-v1-locations
+xchange action new --module-id core-1 --object-name Location --name Create
+https://docs.ramp.com/developer-api/v1/api/locations#patch-developer-v1-locations-location-id
+xchange action new --module-id core-1 --object-name Location --name Update
+
+
+# Memos
+https://docs.ramp.com/developer-api/v1/api/memos#get-developer-v1-memos
+xchange data-object new --module-id core-1 --name Memos
+https://docs.ramp.com/developer-api/v1/api/memos#get-developer-v1-memos-transaction-id
+xchange data-object new --module-id core-1 --name MemosTransaction
+https://docs.ramp.com/developer-api/v1/api/memos#post-developer-v1-memos-transaction-id
+xchange action new --module-id core-1 --object-name MemosTransaction --name Upload
+
+
+# Merchants
+https://docs.ramp.com/developer-api/v1/api/merchants#get-developer-v1-merchants
+xchange data-object new --module-id core-1 --name Merchants
+
+
+# Receipts
+https://docs.ramp.com/developer-api/v1/api/receipts#get-developer-v1-receipts
+xchange data-object new --module-id core-1 --name Receipts
+
+
+https://docs.ramp.com/developer-api/v1/api/receipts#get-developer-v1-receipts-receipt-id
+xchange data-object new --module-id core-1 --name Receipt
+https://docs.ramp.com/developer-api/v1/api/receipts#post-developer-v1-receipts
+xchange action new --module-id core-1 --object-name Receipt --name Upload
+
+
+# Reimbursements
+https://docs.ramp.com/developer-api/v1/api/reimbursements#get-developer-v1-reimbursements
+xchange data-object new --module-id core-1 --name Reimbursements
+https://docs.ramp.com/developer-api/v1/api/reimbursements#get-developer-v1-reimbursements-reimbursement-id
+xchange data-object new --module-id core-1 --name Reimbursement
+
+
+# Spend Programs
+https://docs.ramp.com/developer-api/v1/api/spend-programs#get-developer-v1-spend-programs
+xchange data-object new --module-id core-1 --name SpendPrograms
+https://docs.ramp.com/developer-api/v1/api/spend-programs#get-developer-v1-spend-programs-spend-program-id
+xchange data-object new --module-id core-1 --name SpendProgram
+https://docs.ramp.com/developer-api/v1/api/spend-programs#post-developer-v1-spend-programs
+xchange action new --module-id core-1 --object-name SpendProgram --name Create
+
+
+# Statements
+https://docs.ramp.com/developer-api/v1/api/statements#get-developer-v1-statements
+xchange data-object new --module-id core-1 --name Statements
+https://docs.ramp.com/developer-api/v1/api/statements#get-developer-v1-statements-statement-id
+xchange data-object new --module-id core-1 --name Statement
+
+
+
+
+# Transactions
+https://docs.ramp.com/developer-api/v1/api/transactions#get-developer-v1-transactions
+xchange data-object new --module-id core-1 --name Transactions
+https://docs.ramp.com/developer-api/v1/api/transactions#get-developer-v1-transactions-transaction-id
+xchange data-object new --module-id core-1 --name Transaction
+
+
+# Transfers
+https://docs.ramp.com/developer-api/v1/api/transfers#get-developer-v1-transfers
+xchange data-object new --module-id core-1 --name Transfers
+https://docs.ramp.com/developer-api/v1/api/transfers#get-developer-v1-transfers-transfer-id
+xchange data-object new --module-id core-1 --name Transfer
+
+
+
+
+# Users
+https://docs.ramp.com/developer-api/v1/api/users#get-developer-v1-users
+xchange data-object new --module-id core-1 --name Users
+https://docs.ramp.com/developer-api/v1/api/users#get-developer-v1-users-user-id
+xchange data-object new --module-id core-1 --name User
+https://docs.ramp.com/developer-api/v1/api/users#patch-developer-v1-users-user-id
+xchange action new --module-id core-1 --object-name User --name Update
+https://docs.ramp.com/developer-api/v1/api/users#patch-developer-v1-users-user-id-deactivate
+xchange action new --module-id core-1 --object-name User --name Deactivate
+https://docs.ramp.com/developer-api/v1/api/users#patch-developer-v1-users-user-id-reactivate
+xchange action new --module-id core-1 --object-name User --name Reactivate
+xchange data-object new --module-id core-1 --name UserInvite
+https://docs.ramp.com/developer-api/v1/api/users#post-developer-v1-users-deferred
+xchange action new --module-id core-1 --object-name UserInvite --name Create
+https://docs.ramp.com/developer-api/v1/api/users#get-developer-v1-users-deferred-status-task-id
+xchange data-object new --module-id core-1 --name UsersDeferredTaskStatus
+
+
+# Vendors
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors
+xchange data-object new --module-id core-1 --name Vendors
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors-vendor-id
+xchange data-object new --module-id core-1 --name Vendor
+https://docs.ramp.com/developer-api/v1/api/vendors#patch-developer-v1-vendors-vendor-id
+xchange action new --module-id core-1 --object-name Vendor --name Update
+https://docs.ramp.com/developer-api/v1/api/vendors#delete-developer-v1-vendors-vendor-id
+xchange action new --module-id core-1 --object-name Vendor --name Delete
+https://docs.ramp.com/developer-api/v1/api/vendors#post-developer-v1-vendors
+xchange action new --module-id core-1 --object-name Vendor --name Create
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors-vendor-id-accounts
+xchange data-object new --module-id core-1 --name VendorBankAccounts
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors-vendor-id-accounts-bank-account-id
+xchange data-object new --module-id core-1 --name VendorBankAccount
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors-vendor-id-contacts
+xchange data-object new --module-id core-1 --name VendorContacts
+https://docs.ramp.com/developer-api/v1/api/vendors#get-developer-v1-vendors-vendor-id-contacts-vendor-contact-id
+xchange data-object new --module-id core-1 --name VendorContact
