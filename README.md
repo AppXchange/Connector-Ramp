@@ -162,11 +162,11 @@ connector-ramp/
    ```bash
    dotnet restore
    ```
-3. Configure OAuth credentials in `test-settings.json`
-4. Build the project:
+3. Build the project:
    ```bash
    dotnet build
    ```
+4. Write C# Code for the endpoints (refer to connector.txt)
 
 ## Testing
 
@@ -174,11 +174,16 @@ connector-ramp/
    ```bash
    xchange test init
    ```
-2. Configure test credentials in `test-settings.json`
+2. Configure test credentials and sample data in `test-settings.json`
 3. Run local tests:
    ```bash
-   dotnet test
+   dotnet run --launch-profile "Name in LaunchSettings.json"
    ```
+4. Submit code for review:
+   ```bash
+   xchange code submit 
+   ```
+
 
 ## Additional Resources
 
