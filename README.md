@@ -166,7 +166,7 @@ connector-ramp/
    ```bash
    dotnet build
    ```
-4. Write C# Code for the endpoints (refer to connector.txt)
+4. Write C# Code for the endpoints in 'connector.txt'
 
 ## Testing
 
