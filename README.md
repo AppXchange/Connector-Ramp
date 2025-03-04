@@ -112,32 +112,6 @@ Handles essential business operations and card management.
 - Production: `https://api.ramp.com/developer/v1`
 - Authentication: `https://auth.ramp.com/oauth2`
 
-### Common Endpoints:
-
-#### Accounting Module:
-```
-GET    /accounting/field-options
-POST   /accounting/field-options
-PATCH  /accounting/field-options/{id}
-DELETE /accounting/field-options/{id}
-GET    /accounting/fields
-POST   /accounting/fields
-GET    /accounting/accounts
-POST   /accounting/accounts
-```
-
-#### Core Module:
-```
-GET    /cards
-POST   /cards/deferred-virtual
-POST   /cards/deferred-physical
-PATCH  /cards/{id}
-GET    /transactions
-GET    /users
-PATCH  /users/{id}
-GET    /vendors
-POST   /vendors
-```
 
 ## Development
 
